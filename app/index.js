@@ -4,7 +4,7 @@ const http = require("http");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
-const mongoose = require("mongoose");
+const sequelize = require("./../utils/database.js");
 const flash = require("connect-flash");
 
 //──── config
@@ -12,7 +12,7 @@ const flash = require("connect-flash");
 module.exports = class Application {
 	constructor() {
 		this.setupExpress();
-		this.setMongoConnection();
+		this.setSqlConnection();
 		this.setConfig();
 		this.setRouters();
 	}
@@ -25,14 +25,15 @@ module.exports = class Application {
 	}
 
 	//──── connect MongoDB
-	setMongoConnection() {
-		mongoose.Promise = global.Promise;
-		mongoose.connect(config.database.url, {
-			useNewUrlParser: true,
-			useUnifiedTopology: true,
-		});
-		mongoose.set("useCreateIndex", true);
-		mongoose.set("useFindAndModify", false);
+	setSqlConnection() {
+		sequelize
+			.sync()
+			.then((result) => {
+				console.log("Connection has been established successfully.");
+			})
+			.catch((err) => {
+				console.error("Unable to connect to the database:", err);
+			});
 	}
 
 	//──── express config
@@ -40,10 +41,6 @@ module.exports = class Application {
 		app.use(express.static(config.layout.public_dir));
 		app.set("view engine", config.layout.view_engine);
 		app.set("views", config.layout.view_dir);
-		app.use(config.layout.ejs.expressLayouts);
-		app.set("layout extractScripts", config.layout.ejs.extractScripts);
-		app.set("layout extractStyles", config.layout.ejs.extractStyles);
-		app.set("layout", config.layout.ejs.master);
 
 		app.use(bodyParser.json());
 		app.use(bodyParser.urlencoded({ extended: true }));

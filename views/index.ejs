@@ -1,0 +1,52 @@
+<%- include('./layout/header.ejs'); %>
+<div class="container-fluid mt-5">
+	<div class="row">
+		<div class="col-6">
+			<table class="table table-bordered table-dark">
+				<thead>
+					<tr>
+						<th scope="col">USER</th>
+						<th scope="col">FIRST NAME</th>
+						<th scope="col">LAST NAME</th>
+						<th scope="col">EMAIL</th>
+					</tr>
+				</thead>
+				<tbody>
+					<% users.forEach( user => { %>
+					<tr>
+						<th scope="row"><%=user.id %></th>
+						<td><%=user.firstName %></td>
+						<td><%=user.lastName %></td>
+						<td><%=user.email %></td>
+					</tr>
+					<% }) %>
+				</tbody>
+			</table>
+		</div>
+		<div class="col-6">
+			<table class="table table-bordered table-dark">
+				<thead>
+					<tr>
+						<th scope="col">COMMENT</th>
+						<th scope="col">USER ID</th>
+						<th scope="col">TEXT</th>
+					</tr>
+				</thead>
+				<tbody>
+                    <% comments.forEach( comment => { %>
+                        <tr>
+                            <th scope="row"><%=comment.id %></th>
+                            <td><%=comment.user %></td>
+                            <td><%=comment.Text %></td>
+
+                        </tr>
+                        <% }) %>
+				
+				
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<%- include('./layout/footer.ejs'); %>
